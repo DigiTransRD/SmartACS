@@ -189,7 +189,10 @@
           ${section.rows.map((row) => `
             <div class="matrix-row" role="row">
               <div role="cell"><strong>${escapeHtml(row.module)}</strong><br><span>${escapeHtml(row.detail)}</span></div>
-              ${row.phases.map((phase) => `<div role="cell">${phase ? `<span class="mark${phase === "later" ? " later" : ""}">${phase === "later" ? "＋" : "✓"}</span>` : ""}</div>`).join("")}
+              ${row.phases.map((phase, phaseIndex) => {
+                const labels = ["第一階段", "第二階段", "第三階段"];
+                return `<div class="phase-cell${phase ? " has-mark" : " is-empty"}" data-label="${labels[phaseIndex]}" role="cell">${phase ? `<span class="mark${phase === "later" ? " later" : ""}">${phase === "later" ? "＋" : "✓"}</span>` : ""}</div>`;
+              }).join("")}
             </div>
           `).join("")}
         </div>
@@ -258,6 +261,10 @@
       api: renderApi,
       generic: renderGeneric
     };
+
+    if (data.pageTitle) {
+      document.title = data.pageTitle;
+    }
 
     sectionNav.innerHTML = data.navigation.map((item) => (
       `<a href="#${escapeHtml(item.id)}" data-nav-link>${escapeHtml(item.label)}</a>`
