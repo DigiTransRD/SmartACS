@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>SmartACS 本地端門禁管理 PoC</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-titlebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <strong>SmartACS Local Server</strong>
+          <span>本地端智慧門禁管理 PoC</span>
+        </div>
+      </div>
+      <div class="service-state">
+        <span class="state-dot online"></span>
+        <span>Windows Service 運行中</span>
+        <b>Localhost: 8088</b>
+      </div>
+    </header>
+
+    <nav class="top-menu" aria-label="主功能選單">
+      <button class="top-menu__item active" type="button" data-top-module="terminal">終端機</button>
+      <button class="top-menu__item" type="button" data-top-module="personnel">人員</button>
+      <button class="top-menu__item" type="button" data-top-module="access">門禁</button>
+      <button class="top-menu__item" type="button" data-top-module="report">報表</button>
+      <button class="top-menu__item" type="button" data-top-module="system">工具</button>
+      <button class="top-menu__item" type="button" data-top-module="monitor">監控</button>
+    </nav>
+
+    <main class="workspace">
+      <aside class="module-rail" aria-label="功能群組">
+        <button class="rail-section active" type="button" data-rail-module="terminal">
+          <span class="rail-icon"></span>
+          <strong>終端機</strong>
+          <small>連線、參數、下載</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="personnel">
+          <span class="rail-icon"></span>
+          <strong>人員</strong>
+          <small>人員、卡號、生物辨識</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="access">
+          <span class="rail-icon"></span>
+          <strong>門禁</strong>
+          <small>門、時區、群組、授權</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="report">
+          <span class="rail-icon"></span>
+          <strong>報表</strong>
+          <small>進出紀錄、操作稽核</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="system">
+          <span class="rail-icon"></span>
+          <strong>系統</strong>
+          <small>資料庫、備份、API</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="monitor">
+          <span class="rail-icon"></span>
+          <strong>監控</strong>
+          <small>即時事件、門狀態</small>
+        </button>
+      </aside>
+
+      <section class="content-panel">
+        <div class="context-bar">
+          <div>
+            <p class="eyebrow">Local Management Console</p>
+            <h1 id="viewTitle">終端機管理</h1>
+          </div>
+          <div class="quick-status">
+            <span><b>12</b> 終端機</span>
+            <span><b>2,486</b> 人員</span>
+            <span><b>18</b> 門</span>
+            <span><b>0</b> 高風險告警</span>
+          </div>
+        </div>
+
+        <div class="tool-ribbon" aria-label="操作工具列">
+          <button type="button" data-action="add">新增</button>
+          <button type="button" data-action="edit">修改</button>
+          <button type="button" data-action="delete">刪除</button>
+          <button type="button" data-action="search">查詢</button>
+          <button type="button" data-action="refresh">重新整理</button>
+          <button type="button" data-action="download">資料下發</button>
+          <button type="button" data-action="settings">出入口設定</button>
+          <button type="button" data-action="remote">遠端控制</button>
+        </div>
+
+        <div class="dashboard-strip">
+          <article>
+            <span class="state-dot online"></span>
+            <strong>RFID 控制器</strong>
+            <p>8 台在線，事件接收正常</p>
+          </article>
+          <article>
+            <span class="state-dot online"></span>
+            <strong>人臉辨識機</strong>
+            <p>3 台在線，待下發 24 筆</p>
+          </article>
+          <article>
+            <span class="state-dot warning"></span>
+            <strong>指紋機</strong>
+            <p>1 台離線，最後連線 09:42</p>
+          </article>
+          <article>
+            <span class="state-dot online"></span>
+            <strong>雲端介接 MVP</strong>
+            <p>MQTT / SignalR 心跳正常</p>
+          </article>
+        </div>
+
+        <div class="main-grid">
+          <aside class="filter-pane">
+            <h2>篩選</h2>
+            <label>群組</label>
+            <select id="groupFilter">
+              <option>全部</option>
+              <option>總公司</option>
+              <option>倉儲區</option>
+              <option>研發大樓</option>
+            </select>
+            <label>狀態</label>
+            <select id="stateFilter">
+              <option>全部</option>
+              <option>在線</option>
+              <option>離線</option>
+              <option>待同步</option>
+            </select>
+            <label>關鍵字</label>
+            <input id="keywordInput" type="search" placeholder="門名、人員、終端機...">
+            <button id="applyFilter" type="button">套用查詢</button>
+            <div class="tree-card">
+              <strong>功能導航</strong>
+              <button type="button" data-subview="terminal-list">終端機資料維護</button>
+              <button type="button" data-subview="person-list">人員資料維護</button>
+              <button type="button" data-subview="door-list">門資料維護</button>
+              <button type="button" data-subview="record-list">進出紀錄查詢</button>
+              <button type="button" data-subview="sync-list">同步與下發佇列</button>
+            </div>
+          </aside>
+
+          <section class="data-area">
+            <div class="tabs" role="tablist">
+              <button class="active" type="button" data-tab="overview">清單</button>
+              <button type="button" data-tab="settings">設定</button>
+              <button type="button" data-tab="audit">稽核</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="statusbar">
+      <span>就緒</span>
+      <span>登入：system [最高權限]</span>
+      <span>資料庫：MSSQL / Schema AutoFix 正常</span>
+      <span id="clockText"></span>
+    </footer>
+  </div>
+
+  <dialog id="entityDialog" class="modal">
+    <form method="dialog">
+      <header>
+        <h2 id="dialogTitle">新增門</h2>
+        <button type="button" class="icon-button" data-close-dialog aria-label="關閉">x</button>
+      </header>
+      <div id="dialogBody" class="dialog-body"></div>
+      <footer>
+        <button value="cancel">取消</button>
+        <button class="primary" value="ok">確定</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

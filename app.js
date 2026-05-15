@@ -6,7 +6,7 @@
   const loginForm = document.getElementById("loginForm");
   const passwordInput = document.getElementById("passwordInput");
   const loginMessage = document.getElementById("loginMessage");
-  const lockButton = document.getElementById("lockButton");
+  const pocButton = document.getElementById("pocButton");
   const contentRoot = document.getElementById("contentRoot");
   const sectionNav = document.getElementById("sectionNav");
   const menuToggle = document.getElementById("menuToggle");
@@ -329,15 +329,9 @@
     }
   });
 
-  lockButton.addEventListener("click", () => {
+  pocButton.addEventListener("click", () => {
     setNavOpen(false);
-    contentRoot.innerHTML = "";
-    sectionNav.innerHTML = "";
-    siteView.classList.add("is-hidden");
-    loginView.classList.remove("is-hidden");
-    loginMessage.textContent = "";
-    passwordInput.focus();
-    window.scrollTo({ top: 0, behavior: "auto" });
+    window.open("poc/index.html", "_blank", "noopener");
   });
 
   menuToggle.addEventListener("click", () => {
