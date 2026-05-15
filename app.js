@@ -9,6 +9,8 @@
   const lockButton = document.getElementById("lockButton");
   const contentRoot = document.getElementById("contentRoot");
   const sectionNav = document.getElementById("sectionNav");
+  const menuToggle = document.getElementById("menuToggle");
+  const navOverlay = document.getElementById("navOverlay");
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -191,7 +193,11 @@
               <div role="cell"><strong>${escapeHtml(row.module)}</strong><br><span>${escapeHtml(row.detail)}</span></div>
               ${row.phases.map((phase, phaseIndex) => {
                 const labels = ["第一階段", "第二階段", "第三階段"];
-                return `<div class="phase-cell${phase ? " has-mark" : " is-empty"}" data-label="${labels[phaseIndex]}" role="cell">${phase ? `<span class="mark${phase === "later" ? " later" : ""}">${phase === "later" ? "＋" : "✓"}</span>` : ""}</div>`;
+                const phaseClass = ` phase-${phaseIndex + 1}`;
+                const nowMarks = ["✓", "◆", "●"];
+                const laterMarks = ["↗", "＋", "↗"];
+                const markText = phase === "later" ? laterMarks[phaseIndex] : nowMarks[phaseIndex];
+                return `<div class="phase-cell${phase ? " has-mark" : " is-empty"}${phaseClass}" data-label="${labels[phaseIndex]}" role="cell">${phase ? `<span class="mark${phase === "later" ? " later" : " now"}">${markText}</span>` : ""}</div>`;
               }).join("")}
             </div>
           `).join("")}
@@ -252,6 +258,13 @@
     `;
   }
 
+  function setNavOpen(isOpen) {
+    siteView.classList.toggle("nav-open", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "關閉章節選單" : "開啟章節選單");
+    navOverlay.hidden = !isOpen;
+  }
+
   function renderSite(data) {
     const renderers = {
       architecture: renderArchitecture,
@@ -287,7 +300,9 @@
           return;
         }
         event.preventDefault();
-        window.scrollTo({ top: Math.max(target.offsetTop - 12, 0), behavior: "smooth" });
+        setNavOpen(false);
+        const headerHeight = document.querySelector(".top-header")?.offsetHeight ?? 72;
+        window.scrollTo({ top: Math.max(target.offsetTop - headerHeight, 0), behavior: "smooth" });
       });
     });
 
@@ -315,6 +330,7 @@
   });
 
   lockButton.addEventListener("click", () => {
+    setNavOpen(false);
     contentRoot.innerHTML = "";
     sectionNav.innerHTML = "";
     siteView.classList.add("is-hidden");
@@ -322,5 +338,19 @@
     loginMessage.textContent = "";
     passwordInput.focus();
     window.scrollTo({ top: 0, behavior: "auto" });
+  });
+
+  menuToggle.addEventListener("click", () => {
+    setNavOpen(!siteView.classList.contains("nav-open"));
+  });
+
+  navOverlay.addEventListener("click", () => {
+    setNavOpen(false);
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setNavOpen(false);
+    }
   });
 }());

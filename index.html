@@ -31,14 +31,22 @@
   </main>
 
   <div id="siteView" class="site-shell is-hidden" aria-live="polite">
-    <aside class="side-nav">
+    <header class="top-header">
       <a class="nav-brand" href="#top" data-nav-link>
         <span class="brand-dot"></span>
         <span>SmartACS</span>
       </a>
-      <nav id="sectionNav" aria-label="產品計畫章節"></nav>
-      <button id="lockButton" class="ghost-button" type="button">鎖定內容</button>
-    </aside>
+      <nav id="sectionNav" class="top-nav" aria-label="產品計畫章節"></nav>
+      <div class="header-actions">
+        <button id="lockButton" class="ghost-button" type="button">鎖定內容</button>
+        <button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟章節選單" aria-controls="sectionNav" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </header>
+    <div id="navOverlay" class="nav-overlay" hidden></div>
     <main id="contentRoot" class="content-root"></main>
   </div>
 
