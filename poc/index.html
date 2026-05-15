@@ -73,19 +73,10 @@
             <p class="eyebrow">Local Management Console</p>
             <h1 id="viewTitle">儀表板</h1>
           </div>
-          <div class="quick-status">
-            <span><b>12</b> 終端機</span>
-            <span><b>2,486</b> 人員</span>
-            <span><b>18</b> 門</span>
-            <span><b>0</b> 高風險告警</span>
-          </div>
         </div>
 
         <div class="tool-ribbon" id="toolRibbon" aria-label="操作工具列">
           <button type="button" data-action="add">新增</button>
-          <button type="button" data-action="edit">修改</button>
-          <button type="button" data-action="delete">刪除</button>
-          <button type="button" data-action="search">查詢</button>
           <button type="button" data-action="refresh">重新整理</button>
           <button type="button" data-action="download">資料下發</button>
           <button type="button" data-action="settings">出入口設定</button>
@@ -93,6 +84,12 @@
         </div>
 
         <section id="dashboardView" class="dashboard-page">
+          <div class="summary-cards">
+            <article><b>12</b><span>終端機</span></article>
+            <article><b>2,486</b><span>人員</span></article>
+            <article><b>18</b><span>門</span></article>
+            <article><b>0</b><span>高風險告警</span></article>
+          </div>
           <div class="dashboard-cards">
             <article>
               <span class="state-dot online"></span>

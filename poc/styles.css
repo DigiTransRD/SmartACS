@@ -302,23 +302,33 @@ p {
   font-size: 26px;
 }
 
-.quick-status {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
-.quick-status span {
+.summary-cards article {
   border: 1px solid #c8dce7;
   background: white;
   border-radius: 999px;
-  padding: 7px 10px;
-  color: var(--muted);
+  padding: 12px 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  min-height: 58px;
 }
 
-.quick-status b {
+.summary-cards b {
   color: var(--blue);
+  font-size: 25px;
+}
+
+.summary-cards span {
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .tool-ribbon {
@@ -362,6 +372,10 @@ p {
   min-height: 0;
   overflow: auto;
   padding: 18px;
+}
+
+.dashboard-page .dashboard-cards {
+  margin-top: 0;
 }
 
 .dashboard-cards {
@@ -502,7 +516,7 @@ p {
 
 table {
   width: 100%;
-  min-width: 920px;
+  min-width: 1020px;
   border-collapse: collapse;
 }
 
@@ -523,9 +537,50 @@ th {
   color: #164052;
 }
 
+th.actions-col {
+  width: 96px;
+  text-align: center;
+}
+
 tbody tr:hover,
 tbody tr.selected {
   background: #dff1ff;
+}
+
+.row-actions {
+  text-align: center;
+  width: 96px;
+}
+
+.row-action {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #9fb7c8;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #ffffff 0%, #edf6fb 100%);
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
+.row-action.edit:hover {
+  border-color: var(--blue);
+  background: rgba(8, 120, 201, 0.08);
+}
+
+.row-action.delete:hover {
+  border-color: var(--danger);
+  background: rgba(194, 58, 49, 0.08);
+}
+
+.row-action img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .badge {
@@ -698,6 +753,7 @@ tbody tr.selected {
   }
 
   .dashboard-cards,
+  .summary-cards,
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -737,7 +793,6 @@ tbody tr.selected {
     font-size: 23px;
   }
 
-  .quick-status,
   .tool-ribbon {
     width: 100%;
     justify-content: flex-start;
@@ -748,6 +803,7 @@ tbody tr.selected {
   }
 
   .dashboard-cards,
+  .summary-cards,
   .dashboard-grid,
   .filter-pane,
   .dialog-body {

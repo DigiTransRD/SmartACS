@@ -94,12 +94,25 @@
     return `<span class="badge ${value}"><span class="state-dot ${value}"></span>${labels[value]}</span>`;
   }
 
+  function rowActionsHtml() {
+    return `
+        <td class="row-actions">
+          <button type="button" class="row-action edit" data-row-action="edit" aria-label="編輯資料列" title="編輯">
+            <img src="../edit.png" alt="">
+          </button>
+          <button type="button" class="row-action delete" data-row-action="delete" aria-label="刪除資料列" title="刪除">
+            <img src="../delete.png" alt="">
+          </button>
+        </td>`;
+  }
+
   function renderTable(viewKey) {
     const view = views[viewKey];
-    tableHead.innerHTML = `<tr>${view.columns.map((column) => `<th>${column}</th>`).join("")}</tr>`;
+    tableHead.innerHTML = `<tr>${view.columns.map((column) => `<th>${column}</th>`).join("")}<th class="actions-col">操作</th></tr>`;
     tableBody.innerHTML = view.rows.map((row, rowIndex) => `
       <tr class="${rowIndex === 1 ? "selected" : ""}">
         ${row.map((cell, cellIndex) => `<td>${cellIndex === 0 ? statusBadge(cell) : cell}</td>`).join("")}
+        ${rowActionsHtml()}
       </tr>
     `).join("");
   }
@@ -200,10 +213,18 @@
         openAccessDialog();
       } else if (action === "remote") {
         openRemoteDialog();
-      } else {
+      } else if (action === "refresh" || action === "download") {
         openGenericDialog(action);
       }
     });
+  });
+
+  tableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-row-action]");
+    if (!button) {
+      return;
+    }
+    openGenericDialog(button.dataset.rowAction);
   });
 
   sidebarToggle.addEventListener("click", () => {
@@ -227,8 +248,8 @@
     const view = views[currentView];
     tableBody.innerHTML = view.rows
       .filter((row) => row.join(" ").includes(keyword))
-      .map((row) => `<tr>${row.map((cell, index) => `<td>${index === 0 ? statusBadge(cell) : cell}</td>`).join("")}</tr>`)
-      .join("") || `<tr><td colspan="${view.columns.length}">查無符合「${keyword}」的資料。</td></tr>`;
+      .map((row) => `<tr>${row.map((cell, index) => `<td>${index === 0 ? statusBadge(cell) : cell}</td>`).join("")}${rowActionsHtml()}</tr>`)
+      .join("") || `<tr><td colspan="${view.columns.length + 1}">查無符合「${keyword}」的資料。</td></tr>`;
   });
 
   function updateClock() {
