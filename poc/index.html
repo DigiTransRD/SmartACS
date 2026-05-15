@@ -11,6 +11,9 @@
 <body>
   <div class="app-shell">
     <header class="app-titlebar">
+      <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="收折功能導覽" aria-expanded="true">
+        <span></span><span></span><span></span>
+      </button>
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"></span>
         <div>
@@ -25,44 +28,40 @@
       </div>
     </header>
 
-    <nav class="top-menu" aria-label="主功能選單">
-      <button class="top-menu__item active" type="button" data-top-module="terminal">終端機</button>
-      <button class="top-menu__item" type="button" data-top-module="personnel">人員</button>
-      <button class="top-menu__item" type="button" data-top-module="access">門禁</button>
-      <button class="top-menu__item" type="button" data-top-module="report">報表</button>
-      <button class="top-menu__item" type="button" data-top-module="system">工具</button>
-      <button class="top-menu__item" type="button" data-top-module="monitor">監控</button>
-    </nav>
-
     <main class="workspace">
-      <aside class="module-rail" aria-label="功能群組">
-        <button class="rail-section active" type="button" data-rail-module="terminal">
-          <span class="rail-icon"></span>
+      <aside id="moduleRail" class="module-rail" aria-label="功能大類">
+        <button class="rail-section active" type="button" data-rail-module="dashboard" title="儀表板">
+          <span class="rail-icon dashboard-icon"></span>
+          <strong>儀表板</strong>
+          <small>終端狀態、事件摘要</small>
+        </button>
+        <button class="rail-section" type="button" data-rail-module="terminal" title="終端機">
+          <span class="rail-icon terminal-icon"></span>
           <strong>終端機</strong>
           <small>連線、參數、下載</small>
         </button>
-        <button class="rail-section" type="button" data-rail-module="personnel">
-          <span class="rail-icon"></span>
+        <button class="rail-section" type="button" data-rail-module="personnel" title="人員">
+          <span class="rail-icon personnel-icon"></span>
           <strong>人員</strong>
           <small>人員、卡號、生物辨識</small>
         </button>
-        <button class="rail-section" type="button" data-rail-module="access">
-          <span class="rail-icon"></span>
+        <button class="rail-section" type="button" data-rail-module="access" title="門禁">
+          <span class="rail-icon access-icon"></span>
           <strong>門禁</strong>
           <small>門、時區、群組、授權</small>
         </button>
-        <button class="rail-section" type="button" data-rail-module="report">
-          <span class="rail-icon"></span>
+        <button class="rail-section" type="button" data-rail-module="report" title="報表">
+          <span class="rail-icon report-icon"></span>
           <strong>報表</strong>
           <small>進出記錄、操作稽核</small>
         </button>
-        <button class="rail-section" type="button" data-rail-module="system">
-          <span class="rail-icon"></span>
+        <button class="rail-section" type="button" data-rail-module="system" title="系統">
+          <span class="rail-icon system-icon"></span>
           <strong>系統</strong>
           <small>資料庫、備份、API</small>
         </button>
-        <button class="rail-section" type="button" data-rail-module="monitor">
-          <span class="rail-icon"></span>
+        <button class="rail-section" type="button" data-rail-module="monitor" title="監控">
+          <span class="rail-icon monitor-icon"></span>
           <strong>監控</strong>
           <small>即時事件、門狀態</small>
         </button>
@@ -72,7 +71,7 @@
         <div class="context-bar">
           <div>
             <p class="eyebrow">Local Management Console</p>
-            <h1 id="viewTitle">終端機管理</h1>
+            <h1 id="viewTitle">儀表板</h1>
           </div>
           <div class="quick-status">
             <span><b>12</b> 終端機</span>
@@ -82,7 +81,7 @@
           </div>
         </div>
 
-        <div class="tool-ribbon" aria-label="操作工具列">
+        <div class="tool-ribbon" id="toolRibbon" aria-label="操作工具列">
           <button type="button" data-action="add">新增</button>
           <button type="button" data-action="edit">修改</button>
           <button type="button" data-action="delete">刪除</button>
@@ -93,65 +92,84 @@
           <button type="button" data-action="remote">遠端控制</button>
         </div>
 
-        <div class="dashboard-strip">
-          <article>
-            <span class="state-dot online"></span>
-            <strong>RFID 控制器</strong>
-            <p>8 台在線，事件接收正常</p>
-          </article>
-          <article>
-            <span class="state-dot online"></span>
-            <strong>人臉辨識機</strong>
-            <p>3 台在線，待下發 24 筆</p>
-          </article>
-          <article>
-            <span class="state-dot warning"></span>
-            <strong>指紋機</strong>
-            <p>1 台離線，最後連線 09:42</p>
-          </article>
-          <article>
-            <span class="state-dot online"></span>
-            <strong>雲端介接 MVP</strong>
-            <p>MQTT / SignalR 心跳正常</p>
-          </article>
-        </div>
+        <section id="dashboardView" class="dashboard-page">
+          <div class="dashboard-cards">
+            <article>
+              <span class="state-dot online"></span>
+              <strong>RFID 控制器</strong>
+              <b>8</b>
+              <p>台在線，事件接收正常</p>
+            </article>
+            <article>
+              <span class="state-dot online"></span>
+              <strong>人臉辨識機</strong>
+              <b>3</b>
+              <p>台在線，待下發 24 筆</p>
+            </article>
+            <article>
+              <span class="state-dot warning"></span>
+              <strong>指紋機</strong>
+              <b>1</b>
+              <p>台離線，最後連線 09:42</p>
+            </article>
+            <article>
+              <span class="state-dot online"></span>
+              <strong>雲端介接 MVP</strong>
+              <b>OK</b>
+              <p>MQTT / SignalR 心跳正常</p>
+            </article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="dashboard-panel">
+              <h2>今日門禁事件</h2>
+              <div class="event-list">
+                <p><span class="badge online">正常</span> 09:02 公司大門 陳志明 RFID 進門</p>
+                <p><span class="badge online">正常</span> 09:05 研發機房 林佳蓉 人臉通行</p>
+                <p><span class="badge warning">注意</span> 09:11 公司後門 臨時通行核准</p>
+                <p><span class="badge danger">異常</span> 09:23 倉儲側門 未授權卡片</p>
+              </div>
+            </article>
+            <article class="dashboard-panel">
+              <h2>待處理工作</h2>
+              <div class="task-list">
+                <button type="button" data-rail-jump="terminal">下發 24 筆人臉資料</button>
+                <button type="button" data-rail-jump="access">檢查倉儲側門門未關逾時</button>
+                <button type="button" data-rail-jump="system">重送 1 筆 LINE 通知</button>
+                <button type="button" data-rail-jump="report">匯出今日進出紀錄</button>
+              </div>
+            </article>
+          </div>
+        </section>
 
-        <div class="main-grid">
+        <section id="dataView" class="data-view" hidden>
           <aside class="filter-pane">
             <h2>篩選</h2>
-            <label>群組</label>
-            <select id="groupFilter">
-              <option>全部</option>
-              <option>總公司</option>
-              <option>倉儲區</option>
-              <option>研發大樓</option>
-            </select>
-            <label>狀態</label>
-            <select id="stateFilter">
-              <option>全部</option>
-              <option>在線</option>
-              <option>離線</option>
-              <option>待同步</option>
-            </select>
-            <label>關鍵字</label>
-            <input id="keywordInput" type="search" placeholder="門名、人員、終端機...">
-            <button id="applyFilter" type="button">套用查詢</button>
-            <div class="tree-card">
-              <strong>功能導航</strong>
-              <button type="button" data-subview="terminal-list">終端機資料維護</button>
-              <button type="button" data-subview="person-list">人員資料維護</button>
-              <button type="button" data-subview="door-list">門資料維護</button>
-              <button type="button" data-subview="record-list">進出記錄查詢</button>
-              <button type="button" data-subview="sync-list">同步與下發佇列</button>
+            <div class="filter-field">
+              <label for="groupFilter">群組</label>
+              <select id="groupFilter">
+                <option>全部</option>
+                <option>總公司</option>
+                <option>倉儲區</option>
+                <option>研發大樓</option>
+              </select>
             </div>
+            <div class="filter-field">
+              <label for="stateFilter">狀態</label>
+              <select id="stateFilter">
+                <option>全部</option>
+                <option>在線</option>
+                <option>離線</option>
+                <option>待同步</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="keywordInput">關鍵字</label>
+              <input id="keywordInput" type="search" placeholder="門名、人員、終端機...">
+            </div>
+            <button id="applyFilter" type="button">套用查詢</button>
           </aside>
 
           <section class="data-area">
-            <div class="tabs" role="tablist">
-              <button class="active" type="button" data-tab="overview">清單</button>
-              <button type="button" data-tab="settings">設定</button>
-              <button type="button" data-tab="audit">稽核</button>
-            </div>
             <div class="table-wrap">
               <table>
                 <thead id="tableHead"></thead>
@@ -159,7 +177,7 @@
               </table>
             </div>
           </section>
-        </div>
+        </section>
       </section>
     </main>
 

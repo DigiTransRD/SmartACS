@@ -2,6 +2,9 @@
   "use strict";
 
   const views = {
+    dashboard: {
+      title: "儀表板"
+    },
     terminal: {
       title: "終端機管理",
       columns: ["狀態", "編號", "名稱", "類型", "IP 位址", "韌體版本", "終端機組", "待同步"],
@@ -64,15 +67,20 @@
     }
   };
 
+  const appShell = document.querySelector(".app-shell");
+  const sidebarToggle = document.getElementById("sidebarToggle");
   const viewTitle = document.getElementById("viewTitle");
   const tableHead = document.getElementById("tableHead");
   const tableBody = document.getElementById("tableBody");
+  const dashboardView = document.getElementById("dashboardView");
+  const dataView = document.getElementById("dataView");
+  const toolRibbon = document.getElementById("toolRibbon");
   const dialog = document.getElementById("entityDialog");
   const dialogTitle = document.getElementById("dialogTitle");
   const dialogBody = document.getElementById("dialogBody");
   const clockText = document.getElementById("clockText");
 
-  let currentView = "terminal";
+  let currentView = "dashboard";
 
   function statusBadge(value) {
     const labels = {
@@ -88,8 +96,6 @@
 
   function renderTable(viewKey) {
     const view = views[viewKey];
-    currentView = viewKey;
-    viewTitle.textContent = view.title;
     tableHead.innerHTML = `<tr>${view.columns.map((column) => `<th>${column}</th>`).join("")}</tr>`;
     tableBody.innerHTML = view.rows.map((row, rowIndex) => `
       <tr class="${rowIndex === 1 ? "selected" : ""}">
@@ -99,11 +105,23 @@
   }
 
   function setActiveModule(viewKey) {
-    document.querySelectorAll("[data-top-module], [data-rail-module]").forEach((button) => {
-      const target = button.dataset.topModule || button.dataset.railModule;
-      button.classList.toggle("active", target === viewKey);
+    currentView = viewKey;
+    viewTitle.textContent = views[viewKey].title;
+    document.querySelectorAll("[data-rail-module]").forEach((button) => {
+      button.classList.toggle("active", button.dataset.railModule === viewKey);
     });
-    renderTable(viewKey);
+
+    const isDashboard = viewKey === "dashboard";
+    dashboardView.hidden = !isDashboard;
+    dataView.hidden = isDashboard;
+    toolRibbon.hidden = isDashboard;
+
+    if (!isDashboard) {
+      renderTable(viewKey);
+    }
+
+    appShell.classList.remove("rail-open");
+    sidebarToggle.setAttribute("aria-expanded", String(!appShell.classList.contains("nav-collapsed")));
   }
 
   function openDoorDialog() {
@@ -161,22 +179,15 @@
     dialog.showModal();
   }
 
-  document.querySelectorAll("[data-top-module], [data-rail-module]").forEach((button) => {
+  document.querySelectorAll("[data-rail-module]").forEach((button) => {
     button.addEventListener("click", () => {
-      setActiveModule(button.dataset.topModule || button.dataset.railModule);
+      setActiveModule(button.dataset.railModule);
     });
   });
 
-  document.querySelectorAll("[data-subview]").forEach((button) => {
+  document.querySelectorAll("[data-rail-jump]").forEach((button) => {
     button.addEventListener("click", () => {
-      const map = {
-        "terminal-list": "terminal",
-        "person-list": "personnel",
-        "door-list": "access",
-        "record-list": "report",
-        "sync-list": "system"
-      };
-      setActiveModule(map[button.dataset.subview] || "terminal");
+      setActiveModule(button.dataset.railJump);
     });
   });
 
@@ -195,10 +206,14 @@
     });
   });
 
-  document.querySelectorAll("[data-tab]").forEach((button) => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll("[data-tab]").forEach((tab) => tab.classList.toggle("active", tab === button));
-    });
+  sidebarToggle.addEventListener("click", () => {
+    if (window.matchMedia("(max-width: 980px)").matches) {
+      appShell.classList.toggle("rail-open");
+      sidebarToggle.setAttribute("aria-expanded", String(appShell.classList.contains("rail-open")));
+    } else {
+      appShell.classList.toggle("nav-collapsed");
+      sidebarToggle.setAttribute("aria-expanded", String(!appShell.classList.contains("nav-collapsed")));
+    }
   });
 
   document.querySelector("[data-close-dialog]").addEventListener("click", () => dialog.close());
@@ -227,7 +242,7 @@
     });
   }
 
-  renderTable(currentView);
+  setActiveModule(currentView);
   updateClock();
   window.setInterval(updateClock, 30000);
 }());
