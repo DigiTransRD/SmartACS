@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>SmartACS 下一代門禁管理系統產品計畫</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="loginView" class="login-shell" aria-labelledby="loginTitle">
+    <section class="login-panel">
+      <div class="brand-mark" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">SmartACS Overview</p>
+      <h1 id="loginTitle">產品計畫審閱入口</h1>
+      <p class="login-copy">此靜態網站內容已加密，請輸入審閱密碼後載入產品計畫。</p>
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <input class="sr-only" type="text" name="username" autocomplete="username" value="reviewer" tabindex="-1" aria-hidden="true">
+        <label for="passwordInput">審閱密碼</label>
+        <div class="password-row">
+          <input id="passwordInput" type="password" inputmode="numeric" autocomplete="current-password" required>
+          <button type="submit">解鎖</button>
+        </div>
+        <p id="loginMessage" class="login-message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="security-note">密碼不以明碼儲存；內容需由密碼解密後才會渲染。</p>
+    </section>
+  </main>
+
+  <div id="siteView" class="site-shell is-hidden" aria-live="polite">
+    <aside class="side-nav">
+      <a class="nav-brand" href="#top" data-nav-link>
+        <span class="brand-dot"></span>
+        <span>SmartACS</span>
+      </a>
+      <nav id="sectionNav" aria-label="產品計畫章節"></nav>
+      <button id="lockButton" class="ghost-button" type="button">鎖定內容</button>
+    </aside>
+    <main id="contentRoot" class="content-root"></main>
+  </div>
+
+  <noscript>
+    <div class="noscript">此網站需要 JavaScript 才能解密與顯示內容。</div>
+  </noscript>
+
+  <script src="app.js"></script>
+</body>
+</html>
